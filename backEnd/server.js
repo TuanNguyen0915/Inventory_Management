@@ -19,7 +19,7 @@ app.use(cookieParser())
 app.use(cors())
 
 // Use routers
-app.use('/api/auth', userRouter)
+app.use('/api/user', userRouter)
 
 
 app.listen(port,()=> {
