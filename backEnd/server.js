@@ -2,7 +2,7 @@ import 'dotenv/config'
 import express from 'express'
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
-
+import { errorHandler } from './middleWare/errorMiddleWare.js'
 // connect mongoDB
 import './config/database.js'
 
@@ -21,7 +21,10 @@ app.use(cors())
 // Use routers
 app.use('/api/user', userRouter)
 
+// Error Middleware
+app.use(errorHandler)
 
+// start server
 app.listen(port,()=> {
   console.log(`Server is running on port ${port}`)
 })
