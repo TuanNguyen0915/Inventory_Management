@@ -6,6 +6,9 @@ import cookieParser from 'cookie-parser'
 // connect mongoDB
 import './config/database.js'
 
+// import routes
+import { router as userRouter } from './routes/userRoute.js'
+
 const app = express()
 const port = process.env.PORT || 3001
 
@@ -15,9 +18,9 @@ app.use(express.urlencoded({extended: false}))
 app.use(cookieParser())
 app.use(cors())
 
-app.get('/', (req,res) => {
-  res.send('Server is running')
-})
+// Use routers
+app.use('/api/auth', userRouter)
+
 
 app.listen(port,()=> {
   console.log(`Server is running on port ${port}`)
