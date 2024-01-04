@@ -87,4 +87,16 @@ const login = async (req,res,next) => {
   }
 }
 
-export {register, login} 
+// ----------------- LOGIN -----------------
+const logout = async (req,res,next) => {
+  res.cookie('token', '', {
+    path: '/',
+    httpOnly: true,
+    expires: new Date(0),
+    sameSite: 'none',
+    secure: true
+  })
+  res.status(200).json({success: true, message: 'Successfully Logout'})
+}
+
+export {register, login, logout} 
