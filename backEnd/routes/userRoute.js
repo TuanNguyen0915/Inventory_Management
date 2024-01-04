@@ -8,4 +8,5 @@ router.post('/login', UserCtrl.login)
 router.get('/logout', UserCtrl.logout)
 router.get('/user-details',checkAuth, UserCtrl.userDetails)
 router.put('/update-user', checkAuth, UserCtrl.updateUser)
+router.put('/change-password', checkAuth, UserCtrl.changePassword)
 export {router}

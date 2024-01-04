@@ -127,4 +127,25 @@ const updateUser = async (req, res, next) => {
   }
 } 
 
-export { register, login, logout, userDetails, updateUser } 
+// ----------------- CHANGE PASSWORD -----------------
+const changePassword = async (req,res, next) => {
+  try {
+    let user = await User.findById(req.user._id)
+  // check old password
+  const isPasswordMatching = bcrypt.compareSync(req.body.oldPassword, user.password)
+  if (!isPasswordMatching) {
+    res.status(404)
+    return next('Old password not matching')
+  }
+  // check new password
+  user.password = req.body.newPassword
+  await user.save()
+  const {password, ...rest} = user._doc
+  return res.status(200).json({success: true, message: 'Password change successful'})
+  } catch (error) {
+    res.status(500)
+    return next(error.message)
+  }
+} 
+
+export { register, login, logout, userDetails, updateUser, changePassword } 
