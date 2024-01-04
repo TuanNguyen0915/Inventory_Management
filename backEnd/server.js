@@ -2,7 +2,7 @@ import 'dotenv/config'
 import express from 'express'
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
-import { errorHandler } from './middleWare/errorMiddleWare.js'
+import { errorHandler } from './middleWare/errorMiddleware.js'
 // connect mongoDB
 import './config/database.js'
 

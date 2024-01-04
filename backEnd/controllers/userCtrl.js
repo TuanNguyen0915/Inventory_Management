@@ -87,7 +87,7 @@ const login = async (req,res,next) => {
   }
 }
 
-// ----------------- LOGIN -----------------
+// ----------------- LOGOUT -----------------
 const logout = async (req,res,next) => {
   res.cookie('token', '', {
     path: '/',
@@ -99,4 +99,9 @@ const logout = async (req,res,next) => {
   res.status(200).json({success: true, message: 'Successfully Logout'})
 }
 
-export {register, login, logout} 
+// ----------------- USER DETAIL -----------------
+const userDetails = async (req,res, next) => {
+  
+}
+
+export {register, login, logout, userDetails} 
