@@ -148,4 +148,9 @@ const changePassword = async (req,res, next) => {
   }
 } 
 
-export { register, login, logout, userDetails, updateUser, changePassword } 
+// ----------------- FORGOT PASSWORD -----------------
+const forgotPassword = async (req,res, next) => {
+  res.send('forgot password')
+}
+
+export { register, login, logout, userDetails, updateUser, changePassword, forgotPassword } 
