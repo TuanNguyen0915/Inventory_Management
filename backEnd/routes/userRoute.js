@@ -6,5 +6,5 @@ const router = Router()
 router.post('/register', UserCtrl.register)
 router.post('/login', UserCtrl.login)
 router.get('/logout', UserCtrl.logout)
-router.get('/user-detail',checkAuth, UserCtrl.userDetails)
+router.get('/user-details',checkAuth, UserCtrl.userDetails)
 export {router}

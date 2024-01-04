@@ -4,13 +4,13 @@ import bcrypt from 'bcryptjs'
 
 // -------------- GENERATE TOKEN --------------
 const generateToken = (id) => {
-  return jwt.sign({id},process.env.JWT_SECRET, {expiresIn:'2d'})
+  return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '2d' })
 }
 
 // ----------------- REGISTER -----------------
-const register = async (req,res, next) => {
+const register = async (req, res, next) => {
   try {
-    const {name, email} = req.body
+    const { name, email } = req.body
     // Validation form
     if (!name || !email || !req.body.password) {
       res.status(401)
@@ -23,7 +23,7 @@ const register = async (req,res, next) => {
     }
 
     // Check if user exists
-    let user = await User.findOne({email})
+    let user = await User.findOne({ email })
     if (user) {
       res.status(401)
       return next('This account has already been registered')
@@ -38,16 +38,16 @@ const register = async (req,res, next) => {
     })
 
     const token = generateToken(user._id)
-    const {password, ...rest} = user._doc
+    const { password, ...rest } = user._doc
     // send http-only cookie
     res.cookie('token', token, {
       path: '/',
       httpOnly: true,
-      expires: new Date(Date.now() + 1000*60*60*24*2), // 2 days expires
+      expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 2), // 2 days expires
       sameSite: 'none',
-      secure: true 
+      secure: true
     })
-    return res.status(201).json({success: true, message: 'Successful create the account', data: rest, token})
+    return res.status(201).json({ success: true, message: 'Successful create the account', data: rest, token })
   } catch (error) {
     res.status(500)
     return next(error.message)
@@ -56,9 +56,9 @@ const register = async (req,res, next) => {
 
 // ----------------- LOGIN -----------------
 
-const login = async (req,res,next) => {
+const login = async (req, res, next) => {
   try {
-    let user = await User.findOne({email: req.body.email})
+    let user = await User.findOne({ email: req.body.email })
     // check email
     if (!user) {
       res.status(401)
@@ -66,7 +66,7 @@ const login = async (req,res,next) => {
     }
     // check password
     const isPasswordMatching = bcrypt.compareSync(req.body.password, user.password)
-    if(!isPasswordMatching) {
+    if (!isPasswordMatching) {
       res.status(400)
       return next('Password is not matching')
     }
@@ -75,12 +75,12 @@ const login = async (req,res,next) => {
     res.cookie('token', token, {
       path: '/',
       httpOnly: true,
-      expires : new Date(Date.now() + 1000*60*60*24*2),
+      expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 2),
       sameSite: 'none',
       secure: true
     })
-    const {password, ...rest} = user._doc
-    return res.status(200).json({success: true, message:'Login successful', data: rest, token})
+    const { password, ...rest } = user._doc
+    return res.status(200).json({ success: true, message: 'Login successful', data: rest, token })
   } catch (error) {
     res.status(500)
     return next(error.message)
@@ -88,7 +88,7 @@ const login = async (req,res,next) => {
 }
 
 // ----------------- LOGOUT -----------------
-const logout = async (req,res,next) => {
+const logout = async (req, res, next) => {
   res.cookie('token', '', {
     path: '/',
     httpOnly: true,
@@ -96,12 +96,23 @@ const logout = async (req,res,next) => {
     sameSite: 'none',
     secure: true
   })
-  res.status(200).json({success: true, message: 'Successfully Logout'})
+  res.status(200).json({ success: true, message: 'Successfully Logout' })
 }
 
 // ----------------- USER DETAIL -----------------
-const userDetails = async (req,res, next) => {
-  
+const userDetails = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.user._id)
+    if (!user) {
+      res.status(404)
+      return next('User not found')
+    }
+    const { password, ...rest } = user._doc
+    return res.status(200).json({ success: true, message: 'Get user data', data: rest })
+  } catch (error) {
+    res.status(500)
+    return next(error.message)
+  }
 }
 
-export {register, login, logout, userDetails} 
+export { register, login, logout, userDetails } 
