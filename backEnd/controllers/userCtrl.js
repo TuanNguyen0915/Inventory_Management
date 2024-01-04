@@ -1,6 +1,7 @@
 import User from "../models/userModel.js";
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcryptjs'
+import { response } from "express";
 
 // -------------- GENERATE TOKEN --------------
 const generateToken = (id) => {
@@ -55,7 +56,6 @@ const register = async (req, res, next) => {
 }
 
 // ----------------- LOGIN -----------------
-
 const login = async (req, res, next) => {
   try {
     let user = await User.findOne({ email: req.body.email })
@@ -115,4 +115,16 @@ const userDetails = async (req, res, next) => {
   }
 }
 
-export { register, login, logout, userDetails } 
+// ----------------- UPDATE USER -----------------
+const updateUser = async (req, res, next) => {
+  try {
+    let user = await User.findByIdAndUpdate(req.user._id, req.body, {new:true})
+    const { password, ...rest } = user._doc
+    return res.status(200).json({ success: true, message: 'Successfully Update', data: rest })
+  } catch (error) {
+    res.status(500)
+    return next(error.message)
+  }
+} 
+
+export { register, login, logout, userDetails, updateUser } 
